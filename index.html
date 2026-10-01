@@ -566,7 +566,6 @@ function switchTab(tab) {
   document.getElementById('tab-riverstone').classList.toggle('active', tab==='riverstone');
   document.getElementById('tab-axis').classList.toggle('active', tab==='axis');
   document.getElementById('tab-hiscox').classList.toggle('active', tab==='hiscox');
-  showMainPanels(tab);
   clearDetail();
   renderKPIs();
   renderChart();
