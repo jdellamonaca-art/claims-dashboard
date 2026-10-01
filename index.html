@@ -583,7 +583,7 @@ function clearDetail() {
 function renderKPIs() {
   const data = currentTab === 'ascot' ? ASCOT_DATA : currentTab === 'axis' ? AXIS_DATA : currentTab === 'hiscox' ? HISCOX_DATA : RIVERSTONE_DATA;
   const getStatus = currentTab === 'ascot' ? ascotStatus : currentTab === 'axis' ? axisStatus : currentTab === 'hiscox' ? hiscoxStatus : rstStatus;
-  const label = currentTab === 'ascot' ? 'tutti gli UMR' : 'YOA multipli';
+  const label = currentTab === 'ascot' ? 'tutti gli UMR' : currentTab === 'riverstone' ? 'Riverstone' : currentTab === 'axis' ? 'AXIS' : currentTab === 'hiscox' ? 'Hiscox' : 'YOA multipli';
 
   const total = data.length;
   const open = data.filter(r => getStatus(r).toLowerCase().includes('open')).length;
