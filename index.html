@@ -262,27 +262,9 @@ body { font-family: var(--sans); font-size: 14px; background: var(--bg); color: 
   border-bottom: 1px solid var(--gray-100);
 }
 .umr-fin-row:last-child { border-bottom: none; }
-.umr-loss-ratio-row {
-  display: flex;
-  justify-content: center;
-  border-top: 2px solid var(--gray-200);
-  margin-top: 2px;
-  padding: 4px 0 0;
-}
-.umr-loss-ratio-cell {
-  text-align: center;
-  padding: 10px 24px;
-}
-.umr-loss-ratio-value {
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-.loss-ratio-ok { color: #16a34a; }
 .date-closed { color: #64748b; }
 .history-row { background: rgba(99,102,241,.04); border-left: 3px solid #6366f1; }
 .history-row .dr-label { color: #6366f1; font-weight: 600; }
-.loss-ratio-high { color: #dc2626; }
 .umr-fin-cell {
   padding: 10px 16px;
   border-right: 1px solid var(--gray-100);
@@ -660,21 +642,6 @@ function fmtK(v) {
   return '€ ' + Number(v).toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
-// ── WRITTEN PREMIUMS PER UMR (Gross Written Premium incl. Fees, col IB) ──
-const HISCOX_PREMIUMS = {
-  'Hiscox Binder': 1270788.64,
-};
-const RST_PREMIUMS = {
-  'B1255NM1720720': 1653636.21,
-};
-const ASCOT_PREMIUMS = {
-  'B1255NM2025725': 6600374.62,
-  'B1255NM2024724': 7601281.57,
-  'B1255NM2023723': 13964459.41,
-  'B1255NM2022722': 14131632.57,
-  'B1255NM2021721': 10072867.37,
-  'B1255NM2020720': 5681146.72,
-};
 
 function buildUMRFinStats(data, isAscot, isAxis, isHiscox) {
   const stats = {};
@@ -701,13 +668,6 @@ function buildUMRFinStats(data, isAscot, isAxis, isHiscox) {
     s.totalPaid = s.paidInd + s.paidTPA + s.paidLegal;
     s.totalOut  = s.outInd  + s.outTPA  + s.outLegal;
     s.totalInc  = s.totalPaid + s.totalOut;
-    // Loss Ratio: only where we have written premium data
-    const premiums = isAscot ? ASCOT_PREMIUMS : isHiscox ? HISCOX_PREMIUMS : (!isAxis) ? RST_PREMIUMS : {};
-    if (premiums[u] && premiums[u] > 0) {
-      s.lossRatio = (s.totalInc / premiums[u]) * 100;
-    } else {
-      s.lossRatio = null;
-    }
   }
   return stats;
 }
@@ -777,12 +737,6 @@ function renderUMRTable() {
             <div class="umr-fin-cell-value ${s.outLegal>0?'outstanding':'zero'}">${fmtK(s.outLegal)}</div>
           </div>
         </div>
-        ${s.lossRatio !== null ? `<div class="umr-fin-row umr-loss-ratio-row">
-          <div class="umr-loss-ratio-cell">
-            <div class="umr-fin-cell-label">Attuale Loss Ratio</div>
-            <div class="umr-loss-ratio-value ${s.lossRatio>100?'loss-ratio-high':'loss-ratio-ok'}">${s.lossRatio.toFixed(1)}%</div>
-          </div>
-        </div>` : ''}
       </div>
     `;
     container.appendChild(card);
